@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="describe_serialization.cs" />
+    <Compile Include="describe_xml_context.cs" />
     <Compile Include="Foo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
