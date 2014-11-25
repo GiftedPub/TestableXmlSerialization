@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Command.cs" />
+    <Compile Include="FileBaseExtensions.cs" />
     <Compile Include="FileSerializer.cs" />
     <Compile Include="ICommand.cs" />
     <Compile Include="IXmlContext.cs" />

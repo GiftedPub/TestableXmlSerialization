@@ -27,20 +27,30 @@ namespace TestableXmlSerialization
         {
             var xmlSerializer = new XmlSerializer(typeof(T));
 
-            T eventXml;
+            T payload;
 
             using (var fileStream = FileSystem.File.Open(filePath, FileMode.Open))
             {
                 var modifiedStream = PreProcessStream(fileStream);
-                eventXml = (T)xmlSerializer.Deserialize(modifiedStream);
+                payload = (T)xmlSerializer.Deserialize(modifiedStream);
             }
 
-            command.Update(eventXml);
+            command.Update(payload);
 
-            using (var stream = FileSystem.File.Create(filePath))
+            FileSystem.File.SafeAction(filePath, tempFile =>
             {
-                xmlSerializer.Serialize(stream, eventXml);
-            }
+                using (var memoryStream = new MemoryStream())
+                {
+                    xmlSerializer.Serialize(memoryStream, payload);
+                    
+                    var modifiedStream = PostProcessStream(memoryStream);
+                    
+                    using (var fileStream = FileSystem.File.Create(tempFile))
+                    {
+                        modifiedStream.CopyTo(fileStream);
+                    }
+                }
+            });
         }
 
         /// <summary>
@@ -50,6 +60,17 @@ namespace TestableXmlSerialization
         /// <param name="fileStream">The raw stream of the file's contents</param>
         /// <returns>Same or modified stream</returns>
         protected virtual Stream PreProcessStream(Stream fileStream)
+        {
+            return fileStream;
+        }
+
+        /// <summary>
+        /// This is called after the the command has executed, but before it is serialized.
+        /// You can perform any sort of stream manipulation you need here.
+        /// </summary>
+        /// <param name="fileStream">The raw stream of the file's contents</param>
+        /// <returns>Same or modified stream</returns>
+        protected virtual Stream PostProcessStream(Stream fileStream)
         {
             return fileStream;
         }
