@@ -15,41 +15,53 @@ namespace TestableXmlSerialization
 
     public class XmlSerializerWrapper : IXmlSerializer
     {
-        readonly IFileSystem _fileSystem;
+        protected readonly IFileSystem FileSystem;
 
         public XmlSerializerWrapper(IFileSystem fileSystem)
         {
-            _fileSystem = fileSystem;
+            FileSystem = fileSystem;
         }
 
-        public void Serialize(Stream stream, object o)
+        public virtual void Serialize(string path, object o)
+        {
+            FileSystem.File.SafeAction(path, tempFile =>
+            {
+                var ser = new XmlSerializer(o.GetType());
+                using (var fileStream = FileSystem.File.Create(tempFile))
+                {
+                    ser.Serialize(fileStream, o);
+                }
+            });
+        }
+
+        public virtual void Serialize(Stream stream, object o)
         {
             var ser = new XmlSerializer(o.GetType());
             ser.Serialize(stream, o);
         }
 
-        public void Serialize(TextWriter textWriter, object o)
+        public virtual void Serialize(TextWriter textWriter, object o)
         {
             var ser = new XmlSerializer(o.GetType());
             ser.Serialize(textWriter, o);
         }
 
-        public T Deserialize<T>(string path)
+        public virtual T Deserialize<T>(string path)
         {
-            using (var fs = _fileSystem.File.OpenRead(path))
+            using (var fs = FileSystem.File.OpenRead(path))
             {
                 var ser = new XmlSerializer(typeof(T));
                 return (T)ser.Deserialize(fs);
             }
         }
 
-        public T Deserialize<T>(TextReader stringReader)
+        public virtual T Deserialize<T>(TextReader stringReader)
         {
             var ser = new XmlSerializer(typeof(T));
             return (T) ser.Deserialize(stringReader);
         }
 
-        public T Deserialize<T>(Stream stream)
+        public virtual T Deserialize<T>(Stream stream)
         {
             var ser = new XmlSerializer(typeof(T));
             return (T) ser.Deserialize(stream);
