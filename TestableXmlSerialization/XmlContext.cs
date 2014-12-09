@@ -18,7 +18,8 @@ namespace TestableXmlSerialization
 
         /// <summary>
         /// Opens the file provided, then passes it to a preprocessor, deserializes it,
-        /// then calls your command. Once the command finishes executing the file is saved.
+        /// then calls your command. Once the command finishes executing the postprocessor
+        /// is called, then the file is saved.
         /// </summary>
         /// <typeparam name="T">Type of deserialized data</typeparam>
         /// <param name="filePath">Path to xml file</param>
@@ -42,6 +43,7 @@ namespace TestableXmlSerialization
                 using (var memoryStream = new MemoryStream())
                 {
                     xmlSerializer.Serialize(memoryStream, payload);
+                    memoryStream.Position = 0;
                     
                     var modifiedStream = PostProcessStream(memoryStream);
                     
