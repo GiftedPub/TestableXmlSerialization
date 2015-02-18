@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Testable-XmlSerializer</id>
+    <version>1.1.8</version>
+    <authors>Matt Sell</authors>
+    <description>Serialize objects to xml and persist on filesystem.</description>
+    <language>en-US</language>
+    <projectUrl>https://github.com/msell/TestableXmlSerialization</projectUrl>
+    <licenseUrl>https://github.com/msell/TestableXmlSerialization/license</licenseUrl>
+  </metadata>
+</package>
