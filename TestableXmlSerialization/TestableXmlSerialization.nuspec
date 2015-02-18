@@ -8,5 +8,8 @@
     <language>en-US</language>
     <projectUrl>https://github.com/msell/TestableXmlSerialization</projectUrl>
     <licenseUrl>https://github.com/msell/TestableXmlSerialization/license</licenseUrl>
+    <dependencies>
+      <dependency id="System.IO.Abstractions" version="1.4.0.92" />
+    </dependencies>
   </metadata>
 </package>
